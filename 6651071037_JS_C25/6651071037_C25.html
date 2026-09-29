@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bếp 25 | Gọi món</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			color-scheme: light;
+			--ink: #202c25;
+			--muted: #69766d;
+			--line: #dfe6dc;
+			--paper: #f3f6f0;
+			--white: #ffffff;
+			--leaf: #275b45;
+			--leaf-soft: #e8f1e9;
+			--tomato: #d85240;
+			--tomato-soft: #fff0eb;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			background: var(--paper);
+			color: var(--ink);
+			font-family: "DM Sans", sans-serif;
+			font-size: 15px;
+		}
+
+		button,
+		input {
+			font: inherit;
+		}
+
+		.site-header {
+			background: var(--white);
+			border-bottom: 1px solid var(--line);
+		}
+
+		.header-inner,
+		main {
+			width: min(1120px, calc(100% - 40px));
+			margin: 0 auto;
+		}
+
+		.header-inner {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			min-height: 82px;
+		}
+
+		.brand-photo {
+			width: 54px;
+			height: 54px;
+			border-radius: 8px;
+			object-fit: cover;
+		}
+
+		.brand-name {
+			margin: 0;
+			font-size: 17px;
+			font-weight: 700;
+		}
+
+		.brand-kicker {
+			margin: 3px 0 0;
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.header-tag {
+			margin-left: auto;
+			padding: 7px 11px;
+			border: 1px solid var(--line);
+			border-radius: 999px;
+			color: var(--leaf);
+			font-size: 12px;
+			font-weight: 700;
+		}
+
+		main {
+			padding: 34px 0 56px;
+		}
+
+		.page-heading {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			margin-bottom: 22px;
+		}
+
+		h1,
+		h2,
+		p {
+			margin-top: 0;
+		}
+
+		h1 {
+			margin-bottom: 0;
+			font-family: "DM Serif Display", Georgia, serif;
+			font-size: 34px;
+			font-weight: 400;
+		}
+
+		.heading-note {
+			margin: 0 0 3px;
+			color: var(--muted);
+			font-size: 13px;
+		}
+
+		.order-layout {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 340px;
+			align-items: start;
+			gap: 24px;
+		}
+
+		.menu-panel,
+		.bill-panel {
+			background: var(--white);
+			border: 1px solid var(--line);
+			border-radius: 8px;
+		}
+
+		.menu-panel {
+			padding: 22px;
+		}
+
+		.menu-group + .menu-group {
+			margin-top: 25px;
+			padding-top: 22px;
+			border-top: 1px solid var(--line);
+		}
+
+		.group-heading {
+			display: flex;
+			align-items: baseline;
+			gap: 10px;
+			margin-bottom: 13px;
+		}
+
+		.group-heading h2,
+		.bill-heading h2 {
+			margin: 0;
+			font-size: 17px;
+		}
+
+		.group-count {
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.menu-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 9px;
+		}
+
+		.menu-item {
+			display: flex;
+			align-items: center;
+			gap: 11px;
+			min-height: 70px;
+			padding: 11px 12px;
+			border: 1px solid var(--line);
+			border-radius: 6px;
+			cursor: pointer;
+			transition: border-color 140ms ease, background-color 140ms ease;
+		}
+
+		.menu-item:hover {
+			border-color: #9fb7a2;
+		}
+
+		.menu-item:has(input:checked) {
+			border-color: var(--leaf);
+			background: var(--leaf-soft);
+		}
+
+		.menu-item input {
+			width: 17px;
+			height: 17px;
+			margin: 0;
+			accent-color: var(--leaf);
+			flex: 0 0 auto;
+		}
+
+		.item-copy {
+			min-width: 0;
+			flex: 1;
+		}
+
+		.item-name {
+			display: block;
+			overflow-wrap: anywhere;
+			font-weight: 600;
+		}
+
+		.item-detail {
+			display: block;
+			margin-top: 3px;
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.item-price {
+			flex: 0 0 auto;
+			color: var(--leaf);
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.bill-panel {
+			position: sticky;
+			top: 18px;
+			overflow: hidden;
+		}
+
+		.bill-heading {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 19px 20px;
+			border-bottom: 1px solid var(--line);
+		}
+
+		.bill-mark {
+			color: var(--tomato);
+			font-size: 11px;
+			font-weight: 700;
+			text-transform: uppercase;
+		}
+
+		.bill-content {
+			padding: 18px 20px 20px;
+		}
+
+		.night-option {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 12px;
+			border: 1px solid #f1d6ce;
+			border-radius: 6px;
+			background: var(--tomato-soft);
+			cursor: pointer;
+		}
+
+		.night-option input {
+			width: 17px;
+			height: 17px;
+			margin: 0;
+			accent-color: var(--tomato);
+		}
+
+		.night-copy {
+			flex: 1;
+			font-size: 13px;
+			font-weight: 600;
+		}
+
+		.night-rate {
+			color: var(--tomato);
+			font-size: 12px;
+			font-weight: 700;
+		}
+
+		.empty-state {
+			padding: 24px 8px;
+			color: var(--muted);
+			font-size: 13px;
+			text-align: center;
+		}
+
+		.receipt {
+			margin-top: 18px;
+		}
+
+		.receipt[hidden] {
+			display: none;
+		}
+
+		.receipt-list {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.receipt-row,
+		.total-row {
+			display: flex;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 9px 0;
+			font-size: 13px;
+		}
+
+		.receipt-row span:first-child,
+		.total-row span:first-child {
+			min-width: 0;
+			overflow-wrap: anywhere;
+		}
+
+		.receipt-row span:last-child,
+		.total-row span:last-child {
+			flex: 0 0 auto;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.receipt-list + .total-row {
+			margin-top: 6px;
+			padding-top: 13px;
+			border-top: 1px solid var(--line);
+		}
+
+		.surcharge-row {
+			color: var(--tomato);
+		}
+
+		.grand-total {
+			margin-top: 4px;
+			padding-top: 14px;
+			border-top: 1px dashed #cbd5ca;
+			font-size: 15px;
+			font-weight: 700;
+		}
+
+		.grand-total span:last-child {
+			color: var(--leaf);
+			font-size: 19px;
+		}
+
+		#thongBao {
+			min-height: 18px;
+			margin: 10px 0 0;
+			color: var(--tomato);
+			font-size: 12px;
+		}
+
+		.calculate-button {
+			width: 100%;
+			min-height: 46px;
+			margin-top: 12px;
+			border: 0;
+			border-radius: 6px;
+			background: var(--leaf);
+			color: var(--white);
+			font-weight: 700;
+			cursor: pointer;
+			transition: background-color 140ms ease, transform 140ms ease;
+		}
+
+		.calculate-button:hover {
+			background: #1d4936;
+		}
+
+		.calculate-button:active {
+			transform: translateY(1px);
+		}
+
+		.calculate-button:focus-visible,
+		.menu-item:focus-within,
+		.night-option:focus-within {
+			outline: 3px solid #b6d1bd;
+			outline-offset: 2px;
+		}
+
+		@media (max-width: 820px) {
+			.order-layout {
+				grid-template-columns: minmax(0, 1fr) 300px;
+				gap: 16px;
+			}
+
+			.menu-panel {
+				padding: 17px;
+			}
+
+			.menu-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 650px) {
+			.header-inner,
+			main {
+				width: min(100% - 28px, 520px);
+			}
+
+			.header-inner {
+				min-height: 72px;
+			}
+
+			.brand-photo {
+				width: 46px;
+				height: 46px;
+			}
+
+			.header-tag {
+				padding: 6px 8px;
+				font-size: 10px;
+			}
+
+			main {
+				padding-top: 25px;
+			}
+
+			.page-heading {
+				align-items: start;
+				flex-direction: column;
+				gap: 6px;
+			}
+
+			h1 {
+				font-size: 30px;
+			}
+
+			.order-layout {
+				grid-template-columns: 1fr;
+			}
+
+			.menu-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.bill-panel {
+				position: static;
+			}
+		}
+
+		@media (max-width: 420px) {
+			.menu-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="site-header">
+		<div class="header-inner">
+			<img class="brand-photo" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=160&h=160&q=80" alt="">
+			<div>
+				<p class="brand-name">BẾP 25</p>
+				<p class="brand-kicker">Món ngon mỗi ngày</p>
+			</div>
+			<span class="header-tag">THỰC ĐƠN</span>
+		</div>
+	</header>
+
+	<main>
+		<div class="page-heading">
+			<h1>Chọn món</h1>
+			<p class="heading-note">Thực đơn hôm nay</p>
+		</div>
+
+		<form id="formOrder">
+			<div class="order-layout">
+				<section class="menu-panel" aria-label="Thực đơn">
+					<section class="menu-group" aria-labelledby="foodHeading">
+						<div class="group-heading">
+							<h2 id="foodHeading">Thức ăn</h2>
+							<span class="group-count">04 món</span>
+						</div>
+						<div class="menu-grid">
+							<label class="menu-item">
+								<input type="checkbox" data-name="Phở bò" data-price="45000">
+								<span class="item-copy"><span class="item-name">Phở bò</span><span class="item-detail">Nước dùng ninh xương</span></span>
+								<span class="item-price">45.000đ</span>
+							</label>
+							<label class="menu-item">
+								<input type="checkbox" data-name="Cơm tấm sườn" data-price="42000">
+								<span class="item-copy"><span class="item-name">Cơm tấm sườn</span><span class="item-detail">Sườn nướng, đồ chua</span></span>
+								<span class="item-price">42.000đ</span>
+							</label>
+							<label class="menu-item">
+								<input type="checkbox" data-name="Bún chả" data-price="40000">
+								<span class="item-copy"><span class="item-name">Bún chả</span><span class="item-detail">Chả nướng than hoa</span></span>
+								<span class="item-price">40.000đ</span>
+							</label>
+							<label class="menu-item">
+								<input type="checkbox" data-name="Bánh mì thịt" data-price="25000">
+								<span class="item-copy"><span class="item-name">Bánh mì thịt</span><span class="item-detail">Pate, rau thơm</span></span>
+								<span class="item-price">25.000đ</span>
+							</label>
+						</div>
+					</section>
+
+					<section class="menu-group" aria-labelledby="drinkHeading">
+						<div class="group-heading">
+							<h2 id="drinkHeading">Nước uống</h2>
+							<span class="group-count">04 món</span>
+						</div>
+						<div class="menu-grid">
+							<label class="menu-item">
+								<input type="checkbox" data-name="Cà phê sữa đá" data-price="22000">
+								<span class="item-copy"><span class="item-name">Cà phê sữa đá</span><span class="item-detail">Rang xay đậm vị</span></span>
+								<span class="item-price">22.000đ</span>
+							</label>
+							<label class="menu-item">
+								<input type="checkbox" data-name="Nước cam" data-price="20000">
+								<span class="item-copy"><span class="item-name">Nước cam</span><span class="item-detail">Cam tươi vắt</span></span>
+								<span class="item-price">20.000đ</span>
+							</label>
+							<label class="menu-item">
+								<input type="checkbox" data-name="Trà đá" data-price="5000">
+								<span class="item-copy"><span class="item-name">Trà đá</span><span class="item-detail">Trà xanh mát lạnh</span></span>
+								<span class="item-price">5.000đ</span>
+							</label>
+							<label class="menu-item">
+								<input type="checkbox" data-name="Nước suối" data-price="10000">
+								<span class="item-copy"><span class="item-name">Nước suối</span><span class="item-detail">Chai 500 ml</span></span>
+								<span class="item-price">10.000đ</span>
+							</label>
+						</div>
+					</section>
+				</section>
+
+				<aside class="bill-panel" aria-labelledby="billHeading">
+					<div class="bill-heading">
+						<h2 id="billHeading">Hóa đơn</h2>
+						<span class="bill-mark">Thanh toán</span>
+					</div>
+					<div class="bill-content">
+						<label class="night-option">
+							<input type="checkbox" id="banDem">
+							<span class="night-copy">Dùng món ban đêm</span>
+							<span class="night-rate">+10%</span>
+						</label>
+						<p class="empty-state" id="emptyState">Chưa có món được chọn</p>
+						<div class="receipt" id="receipt" hidden>
+							<ul class="receipt-list" id="danhSachMon"></ul>
+							<div class="total-row"><span>Tạm tính</span><span id="tamTinh"></span></div>
+							<div class="total-row surcharge-row" id="dongPhuThu" hidden><span>Phụ thu ban đêm · 10%</span><span id="phuThu"></span></div>
+							<div class="total-row grand-total"><span>Tổng tiền</span><span id="tongTien"></span></div>
+						</div>
+						<p id="thongBao" aria-live="polite"></p>
+						<button class="calculate-button" type="submit">Tính tiền</button>
+					</div>
+				</aside>
+			</div>
+		</form>
+	</main>
+	<script src="6651071037_JS_C25.js"></script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tra cứu Can Chi</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--ink: #202c25;
+			--muted: #69766d;
+			--line: #dfe6dc;
+			--paper: #f3f6f0;
+			--white: #fff;
+			--leaf: #275b45;
+			--leaf-soft: #e8f1e9;
+			--tomato: #d85240;
+			--tomato-soft: #fff0eb;
+		}
+
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			background: var(--paper);
+			color: var(--ink);
+			font-family: "DM Sans", sans-serif;
+			font-size: 15px;
+		}
+		button, input { font: inherit; }
+		header {
+			display: flex;
+			align-items: center;
+			gap: 13px;
+			min-height: 78px;
+			padding: 12px max(22px, calc((100% - 1080px) / 2));
+			background: var(--white);
+			border-bottom: 1px solid var(--line);
+		}
+		header img {
+			width: 50px;
+			height: 50px;
+			border-radius: 7px;
+			object-fit: cover;
+		}
+		.brand { margin: 0; font-weight: 700; }
+		.brand-note { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+		main { width: min(1080px, calc(100% - 40px)); margin: 34px auto 60px; }
+		h1 {
+			margin: 0 0 20px;
+			font-family: "DM Serif Display", Georgia, serif;
+			font-size: 34px;
+			font-weight: 400;
+		}
+		.layout {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 330px;
+			align-items: start;
+			gap: 22px;
+		}
+		.menu, .bill {
+			background: var(--white);
+			border: 1px solid var(--line);
+			border-radius: 8px;
+		}
+		.menu { padding: 22px; }
+		.category + .category { margin-top: 23px; padding-top: 20px; border-top: 1px solid var(--line); }
+		h2 { margin: 0 0 12px; font-size: 17px; }
+		.options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+		.option {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			min-height: 64px;
+			padding: 10px 12px;
+			border: 1px solid var(--line);
+			border-radius: 6px;
+			cursor: pointer;
+			transition: background-color 140ms ease, border-color 140ms ease;
+		}
+		.option:hover { border-color: #9fb7a2; }
+		.option:has(input:checked) { border-color: var(--leaf); background: var(--leaf-soft); }
+		.option input, .night input { width: 17px; height: 17px; margin: 0; accent-color: var(--leaf); flex: 0 0 auto; }
+		.option-name { flex: 1; font-weight: 600; }
+		.option-price { color: var(--leaf); font-size: 13px; font-weight: 700; white-space: nowrap; }
+		.bill { position: sticky; top: 18px; overflow: hidden; }
+		.bill-title { margin: 0; padding: 18px 20px; border-bottom: 1px solid var(--line); font-size: 17px; }
+		.bill-body { padding: 18px 20px 20px; }
+		.night {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 12px;
+			border: 1px solid #f1d6ce;
+			border-radius: 6px;
+			background: var(--tomato-soft);
+			cursor: pointer;
+		}
+		.night input { accent-color: var(--tomato); }
+		.night span:nth-child(2) { flex: 1; font-size: 13px; font-weight: 600; }
+		.night strong { color: var(--tomato); font-size: 12px; }
+		.empty { padding: 24px 8px; color: var(--muted); font-size: 13px; text-align: center; }
+		#hoaDon[hidden], .empty[hidden], .fee[hidden] { display: none; }
+		ul { margin: 18px 0 0; padding: 0; list-style: none; }
+		.receipt-row, .sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; font-size: 13px; }
+		.receipt-row span:first-child, .sum-row span:first-child { overflow-wrap: anywhere; }
+		.receipt-row span:last-child, .sum-row span:last-child { flex: 0 0 auto; font-variant-numeric: tabular-nums; }
+		.sum-row { border-top: 1px solid var(--line); }
+		.fee { color: var(--tomato); }
+		.grand { margin-top: 4px; padding-top: 13px; border-top: 1px dashed #cbd5ca; font-size: 15px; font-weight: 700; }
+		.grand span:last-child { color: var(--leaf); font-size: 19px; }
+		#thongBao { min-height: 18px; margin: 10px 0 0; color: var(--tomato); font-size: 12px; }
+		button[type="submit"] {
+			width: 100%;
+			min-height: 46px;
+			margin-top: 12px;
+			border: 0;
+			border-radius: 6px;
+			background: var(--leaf);
+			color: var(--white);
+			font-weight: 700;
+			cursor: pointer;
+		}
+		button[type="submit"]:hover { background: #1d4936; }
+		button:focus-visible, .option:focus-within, .night:focus-within { outline: 3px solid #b6d1bd; outline-offset: 2px; }
+		@media (max-width: 760px) {
+			.layout { grid-template-columns: minmax(0, 1fr) 290px; gap: 14px; }
+			.menu { padding: 16px; }
+			.options { grid-template-columns: 1fr; }
+		}
+		@media (max-width: 620px) {
+			main { width: min(100% - 28px, 520px); margin-top: 25px; }
+			h1 { font-size: 30px; }
+			.layout { grid-template-columns: 1fr; }
+			.options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.bill { position: static; }
+		}
+		@media (max-width: 400px) { .options { grid-template-columns: 1fr; } }
+	</style>
+	<style>
+		.year-layout { display: grid; place-items: center; }
+		.year-card { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; column-gap: 34px; width: min(100%, 820px); padding: 28px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; }
+		.year-card h1 { grid-column: 1 / -1; margin-bottom: 22px; }
+		.year-form { display: grid; grid-template-columns: 1fr; align-items: end; gap: 12px; }
+		.year-field label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 600; }
+		.year-field input { width: 100%; height: 46px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); }
+		.year-field input:focus { outline: 3px solid var(--leaf-soft); border-color: var(--leaf); }
+		.year-form button { width: 100%; margin: 0; }
+		#thongBao { min-height: 18px; }
+		#ketqua { margin: 0; padding: 0 0 0 28px; border-left: 1px solid var(--line); text-align: center; }
+		#ketqua[hidden] { display: none; }
+		.result-field label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 600; }
+		.result-field input { width: 100%; height: 46px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--leaf-soft); color: var(--leaf); font-family: "DM Serif Display", Georgia, serif; font-size: 22px; }
+		@media (max-width: 520px) {
+			.year-card { grid-template-columns: 1fr; row-gap: 0; padding: 21px; }
+			.year-card h1 { grid-column: auto; }
+			.year-form { grid-template-columns: 1fr; }
+			.year-form button { width: 100%; }
+			#ketqua { margin-top: 22px; padding: 20px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=160&h=160&q=80" alt="">
+		<div>
+			<p class="brand">LỊCH PHƯƠNG ĐÔNG</p>
+			<p class="brand-note">Thiên can · Địa chi</p>
+		</div>
+	</header>
+	<main>
+		<div class="year-layout">
+			<section class="year-card" aria-labelledby="pageTitle">
+				<h1 id="pageTitle">Can Chi năm âm lịch</h1>
+				<form id="formNam" novalidate>
+					<div class="year-form">
+						<div class="year-field">
+							<label for="nam">Năm dương lịch</label>
+							<input type="text" id="nam" inputmode="numeric" maxlength="8" placeholder="Ví dụ: 2024" autocomplete="off" aria-describedby="thongBao">
+						</div>
+						<button type="submit">Tra cứu</button>
+					</div>
+					<p id="thongBao" role="alert" aria-live="polite"></p>
+				</form>
+				<div id="ketqua" aria-live="polite">
+					<div class="result-field">
+						<label for="canChi">Can Chi năm âm lịch</label>
+						<input type="text" id="canChi" readonly placeholder="Kết quả tra cứu">
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+	<script src="6651071037_JS_C26.js"></script>
+</body>
+</html>
